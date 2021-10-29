@@ -1,10 +1,10 @@
 import computability.turing_machine
 
 inductive Λ -- states
-| initial : Λ
-| a : Λ
-| b : Λ
-instance Λ.inhabited : inhabited Λ := ⟨Λ.initial⟩
+| A : Λ
+| B : Λ
+| C : Λ
+instance Λ.inhabited : inhabited Λ := ⟨Λ.A⟩
 
 inductive Γ -- symbols
 | zero : Γ
@@ -84,9 +84,9 @@ theorem M1_halts''' : halts''' M1 :=
 halts''_iff'''.mp M1_halts''
 
 
--- machine that goes initial → a → halt:
+-- machine that goes A → B → halt:
 def M2 : turing.TM0.machine Γ Λ
-| Λ.initial symbol := some ⟨Λ.a, turing.TM0.stmt.write symbol⟩ 
+| Λ.A symbol := some ⟨Λ.B, turing.TM0.stmt.write symbol⟩ 
 | _ _ := none
 
 -- step 1, Λ.a:
@@ -110,8 +110,8 @@ begin
 end
 
 
--- machine that loops initial → a → initial → a → ⋯:
+-- machine that loops A → B → A → B → ⋯:
 def M3 : turing.TM0.machine Γ Λ
-| Λ.initial symbol := some ⟨Λ.a, turing.TM0.stmt.write symbol⟩
-| Λ.a symbol := some ⟨Λ.initial, turing.TM0.stmt.write symbol⟩
+| Λ.A symbol := some ⟨Λ.B, turing.TM0.stmt.write symbol⟩
+| Λ.B symbol := some ⟨Λ.A, turing.TM0.stmt.write symbol⟩
 | _ _ := none
