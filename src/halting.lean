@@ -15,8 +15,8 @@ instance Γ.inhabited : inhabited Γ := ⟨Γ.zero⟩
 def cfg₀ : turing.TM0.cfg Γ Λ := turing.TM0.init []
 
 -- chainable step function:
-def step' (M : turing.TM0.machine Γ Λ) : option (turing.TM0.cfg Γ Λ) -> option (turing.TM0.cfg Γ Λ) :=
-  λ x, option.bind x (turing.TM0.step M)
+def step' (M : turing.TM0.machine Γ Λ) (x : option (turing.TM0.cfg Γ Λ)) : option (turing.TM0.cfg Γ Λ) :=
+option.bind x (turing.TM0.step M)
 
 def multistep (M : turing.TM0.machine Γ Λ) (n : ℕ) : option (turing.TM0.cfg Γ Λ) -> option (turing.TM0.cfg Γ Λ) :=
 n.repeat $ λ _, step' M
