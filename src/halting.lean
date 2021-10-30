@@ -21,6 +21,24 @@ option.bind x (turing.TM0.step M)
 def multistep (M : turing.TM0.machine Γ Λ) (n : ℕ) : option (turing.TM0.cfg Γ Λ) -> option (turing.TM0.cfg Γ Λ) :=
 n.repeat $ λ _, step' M
 
+theorem multistep_none_add : ∀ {cfg : turing.TM0.cfg Γ Λ} {M : turing.TM0.machine Γ Λ} {n : ℕ},
+multistep M n cfg = none → ∀ { m : ℕ }, multistep M (n + m) cfg = none :=
+begin
+  intros cfg M n hn m,
+  induction m with m hm,
+  { exact hn, },
+  { rw [multistep, nat.add_succ, nat.repeat, ← multistep, hm],
+    refl, },
+end
+
+theorem multistep_none_ge : ∀ {cfg : turing.TM0.cfg Γ Λ} {M : turing.TM0.machine Γ Λ} {n : ℕ},
+multistep M n cfg = none → ∀ { m ≥ n }, multistep M m cfg = none :=
+begin
+  intros cfg M n hn m hm,
+  rw ← nat.add_sub_of_le hm,
+  exact multistep_none_add hn,
+end
+
 -- equivalent definitions of halting:
 def halts (M : turing.TM0.machine Γ Λ) : Prop :=
 ∃ n, multistep M n cfg₀ = none
