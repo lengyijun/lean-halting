@@ -21,8 +21,7 @@ option.bind x (turing.TM0.step M)
 def multistep (M : turing.TM0.machine Γ Λ) (n : ℕ) : option (turing.TM0.cfg Γ Λ) -> option (turing.TM0.cfg Γ Λ) :=
 n.repeat $ λ _, step' M
 
-theorem multistep_none_add : ∀ {cfg : turing.TM0.cfg Γ Λ} {M : turing.TM0.machine Γ Λ} {n : ℕ},
-multistep M n cfg = none → ∀ { m : ℕ }, multistep M (n + m) cfg = none :=
+theorem multistep_none_add : ∀ {cfg M n}, multistep M n cfg = none → ∀ {m}, multistep M (n + m) cfg = none :=
 begin
   intros cfg M n hn m,
   induction m with m hm,
@@ -31,8 +30,7 @@ begin
     refl, },
 end
 
-theorem multistep_none_ge : ∀ {cfg : turing.TM0.cfg Γ Λ} {M : turing.TM0.machine Γ Λ} {n : ℕ},
-multistep M n cfg = none → ∀ { m ≥ n }, multistep M m cfg = none :=
+theorem multistep_none_ge : ∀ {cfg M n}, multistep M n cfg = none → ∀ { m ≥ n }, multistep M m cfg = none :=
 begin
   intros cfg M n hn m hm,
   rw ← nat.add_sub_of_le hm,
@@ -52,17 +50,17 @@ turing.TM0.eval M [] ≠ part.none
 def halts''' (M : turing.TM0.machine Γ Λ) : Prop :=
 ∃ x, turing.TM0.eval M [] = part.some x
 
-theorem halts'_iff'' : ∀ {M : turing.TM0.machine Γ Λ}, halts' M ↔ halts'' M :=
+theorem halts'_iff'' : ∀ {M}, halts' M ↔ halts'' M :=
 begin
   intro M,
   rw [halts'', ne.def, part.eq_none_iff', ← halts'],
   exact not_not.symm,
 end
 
-theorem halts''_iff''' : ∀ {M : turing.TM0.machine Γ Λ}, halts'' M ↔ halts''' M :=
+theorem halts''_iff''' : ∀ {M}, halts'' M ↔ halts''' M :=
 λ M, part.ne_none_iff
 
-theorem halts'_iff''' : ∀ {M : turing.TM0.machine Γ Λ}, halts' M ↔ halts''' M :=
+theorem halts'_iff''' : ∀ {M}, halts' M ↔ halts''' M :=
 λ M, ⟨
   (λ h', halts''_iff'''.mp $ halts'_iff''.mp h'),
   (λ h''', halts'_iff''.mpr $ halts''_iff'''.mpr h''')
