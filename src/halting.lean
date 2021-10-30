@@ -124,7 +124,7 @@ begin
   rw turing.mem_eval,
   split,
   { exact relation.refl_trans_gen.refl, },
-  { refl, },
+  { sorry, },
 end
 
 
