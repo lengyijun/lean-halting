@@ -37,6 +37,7 @@ begin
   exact multistep_none_add hn,
 end
 
+
 -- equivalent definitions of halting:
 def halts (M : turing.TM0.machine Γ Λ) : Prop :=
 ∃ n, multistep M n cfg₀ = none
@@ -86,7 +87,7 @@ theorem M1_halts : halts M1 :=
 theorem M1_halts' : halts' M1 :=
 begin
   rw [halts', turing.TM0.eval, part.map_dom, part.dom_iff_mem],
-  use cfg₀, -- or existsi _ or refine ⟨_, _⟩
+  existsi _, -- or use cfg₀ or refine ⟨_, _⟩
   rw turing.mem_eval,
   split,
   { exact relation.refl_trans_gen.refl, },
@@ -118,7 +119,7 @@ theorem M2_halts : halts M2 :=
 theorem M2_halts' : halts' M2 :=
 begin
   rw [halts', turing.TM0.eval, part.map_dom, part.dom_iff_mem],
-  use cfg₀, -- or existsi _ or refine ⟨_, _⟩
+  existsi _, -- or use cfg₀ or refine ⟨_, _⟩
   rw turing.mem_eval,
   split,
   { exact relation.refl_trans_gen.refl, },
