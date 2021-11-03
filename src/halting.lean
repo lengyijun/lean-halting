@@ -132,3 +132,43 @@ def M3 : turing.TM0.machine Γ Λ
 | Λ.A symbol := some ⟨Λ.B, turing.TM0.stmt.write symbol⟩
 | Λ.B symbol := some ⟨Λ.A, turing.TM0.stmt.write symbol⟩
 | _ _ := none
+
+
+lemma M3_AB_only : ∀ n, ∃ tape, multistep M3 n cfg₀ = some ⟨Λ.A, tape⟩ ∨ multistep M3 n cfg₀ = some ⟨Λ.B, tape⟩ :=
+begin
+  intro n,
+  induction n with n hn,
+  { existsi _,
+    left,
+    refl, },
+  { cases hn with tape_n hn,
+    cases hn,
+    {
+      existsi _,
+      right,
+      rw [multistep, nat.repeat, ← multistep, hn, step', option.some_bind', turing.TM0.step],
+      simp,
+      existsi _,
+      existsi _,
+      split; refl, },
+    {
+      existsi _,
+      left,
+      rw [multistep, nat.repeat, ← multistep, hn, step', option.some_bind', turing.TM0.step],
+      simp,
+      existsi _,
+      existsi _,
+      split; refl, },
+  },
+end
+
+theorem M3_not_halts : ¬ halts M3 :=
+begin
+  intro h,
+  cases h with n hn,
+  cases M3_AB_only n with tape h_tape,
+  cases h_tape; {
+    rw h_tape at hn,
+    exact option.no_confusion hn,
+  },
+end
