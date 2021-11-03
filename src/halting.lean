@@ -141,9 +141,8 @@ begin
     left,
     refl, },
   { cases hn with tape_n hn,
-    cases hn,
+    cases hn; existsi _,
     {
-      existsi _,
       right,
       rw [multistep, nat.repeat, ← multistep, hn, step', option.bind, turing.TM0.step],
       simp,
@@ -151,7 +150,6 @@ begin
       existsi _,
       split; refl, },
     {
-      existsi _,
       left,
       rw [multistep, nat.repeat, ← multistep, hn, step', option.bind, turing.TM0.step],
       simp,
