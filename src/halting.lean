@@ -21,19 +21,19 @@ option.bind x (turing.TM0.step M)
 def multistep (M : turing.TM0.machine Γ Λ) (n : ℕ) : option (turing.TM0.cfg Γ Λ) -> option (turing.TM0.cfg Γ Λ) :=
 n.repeat $ λ _, step' M
 
-theorem multistep_none_add : ∀ {cfg M n}, multistep M n cfg = none → ∀ {m}, multistep M (n + m) cfg = none :=
+theorem multistep_none_add {cfg M n m} (hn : multistep M n cfg = none) :
+  multistep M (n + m) cfg = none :=
 begin
-  intros cfg M n hn m,
   induction m with m hm,
   { exact hn, },
   { rw [multistep, nat.add_succ, nat.repeat, ← multistep, hm],
     refl, },
 end
 
-theorem multistep_none_ge : ∀ {cfg M n}, multistep M n cfg = none → ∀ { m ≥ n }, multistep M m cfg = none :=
+theorem multistep_none_ge {cfg M n} {m ≥ n} (hn : multistep M n cfg = none) :
+  multistep M m cfg = none :=
 begin
-  intros cfg M n hn m hm,
-  rw ← nat.add_sub_of_le hm,
+  rw ← nat.add_sub_of_le H,
   exact multistep_none_add hn,
 end
 
@@ -51,21 +51,18 @@ turing.TM0.eval M [] ≠ part.none
 def halts''' (M : turing.TM0.machine Γ Λ) : Prop :=
 ∃ x, turing.TM0.eval M [] = part.some x
 
-theorem halts'_iff'' : ∀ {M}, halts' M ↔ halts'' M :=
+theorem halts'_iff'' {M} : halts' M ↔ halts'' M :=
 begin
-  intro M,
   rw [halts'', ne.def, part.eq_none_iff', ← halts'],
   exact not_not.symm,
 end
 
-theorem halts''_iff''' : ∀ {M}, halts'' M ↔ halts''' M :=
-λ M, part.ne_none_iff
+theorem halts''_iff''' {M} : halts'' M ↔ halts''' M :=
+part.ne_none_iff
 
-theorem halts'_iff''' : ∀ {M}, halts' M ↔ halts''' M :=
-λ M, ⟨
-  (λ h', halts''_iff'''.mp $ halts'_iff''.mp h'),
-  (λ h''', halts'_iff''.mpr $ halts''_iff'''.mpr h''')
-⟩
+theorem halts'_iff''' {M} : halts' M ↔ halts''' M :=
+⟨ (λ h', halts''_iff'''.mp $ halts'_iff''.mp h'),
+  (λ h''', halts'_iff''.mpr $ halts''_iff'''.mpr h''')⟩
 
 
 -- machine that halts immediately:
@@ -133,9 +130,9 @@ def M3 : turing.TM0.machine Γ Λ
 | Λ.B symbol := some ⟨Λ.A, turing.TM0.stmt.write symbol⟩
 | _ _ := none
 
-lemma M3_AB_only : ∀ n, ∃ tape, multistep M3 n cfg₀ = some ⟨Λ.A, tape⟩ ∨ multistep M3 n cfg₀ = some ⟨Λ.B, tape⟩ :=
+lemma M3_AB_only {n} : ∃ tape,
+  multistep M3 n cfg₀ = some ⟨Λ.A, tape⟩ ∨ multistep M3 n cfg₀ = some ⟨Λ.B, tape⟩ :=
 begin
-  intro n,
   induction n with n hn,
   { existsi _,
     left,
@@ -163,7 +160,7 @@ theorem M3_not_halts : ¬ halts M3 :=
 begin
   intro h,
   cases h with n hn,
-  cases M3_AB_only n with tape h_tape,
+  cases M3_AB_only with tape h_tape,
   cases h_tape; {
     rw h_tape at hn,
     exact option.no_confusion hn,
