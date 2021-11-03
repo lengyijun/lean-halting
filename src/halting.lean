@@ -133,7 +133,6 @@ def M3 : turing.TM0.machine Γ Λ
 | Λ.B symbol := some ⟨Λ.A, turing.TM0.stmt.write symbol⟩
 | _ _ := none
 
-
 lemma M3_AB_only : ∀ n, ∃ tape, multistep M3 n cfg₀ = some ⟨Λ.A, tape⟩ ∨ multistep M3 n cfg₀ = some ⟨Λ.B, tape⟩ :=
 begin
   intro n,
