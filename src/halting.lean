@@ -145,7 +145,7 @@ begin
     {
       existsi _,
       right,
-      rw [multistep, nat.repeat, ← multistep, hn, step', option.some_bind', turing.TM0.step],
+      rw [multistep, nat.repeat, ← multistep, hn, step', option.bind, turing.TM0.step],
       simp,
       existsi _,
       existsi _,
@@ -153,7 +153,7 @@ begin
     {
       existsi _,
       left,
-      rw [multistep, nat.repeat, ← multistep, hn, step', option.some_bind', turing.TM0.step],
+      rw [multistep, nat.repeat, ← multistep, hn, step', option.bind, turing.TM0.step],
       simp,
       existsi _,
       existsi _,
