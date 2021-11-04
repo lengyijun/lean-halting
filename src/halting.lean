@@ -70,22 +70,16 @@ part.ne_none_iff
 
 
 -- machine that halts immediately:
-def M1 : turing.TM0.machine Γ Λ
+def M₁ : turing.TM0.machine Γ Λ
 | _ _ := none
 
-#reduce turing.TM0.step M1 cfg₀
-
-theorem M1_halts_immediately : turing.TM0.step M1 cfg₀ = none :=
+theorem M₁_halts_immediately : turing.TM0.step M₁ cfg₀ = none :=
 rfl
 
-#eval turing.TM0.eval M1 []
--- times out:
--- #reduce turing.TM0.eval machine []
-
-theorem M1_halts : halts M1 :=
+theorem M₁_halts : halts M₁ :=
 ⟨1, rfl⟩
 
-theorem M1_halts' : halts' M1 :=
+theorem M₁_halts' : halts' M₁ :=
 begin
   rw [halts', turing.TM0.eval, part.map_dom, part.dom_iff_mem],
   existsi _, -- or use cfg₀ or refine ⟨_, _⟩
@@ -95,29 +89,31 @@ begin
   { refl, },
 end
 
-theorem M1_halts'' : halts'' M1 :=
-halts'_iff''.mp M1_halts'
+theorem M₁_halts'' : halts'' M₁ :=
+halts'_iff''.mp M₁_halts'
 
-theorem M1_halts''' : halts''' M1 :=
-halts''_iff'''.mp M1_halts''
+theorem M₁_halts''' : halts''' M₁ :=
+halts''_iff'''.mp M₁_halts''
 
 
 -- machine that goes A → B → halt:
-def M2 : turing.TM0.machine Γ Λ
+def M₂ : turing.TM0.machine Γ Λ
 | Λ.A symbol := some ⟨Λ.B, turing.TM0.stmt.write symbol⟩ 
 | _ _ := none
 
--- step 1, Λ.a:
-#reduce multistep M2 1 cfg₀
+-- step 0, Λ.A:
+#reduce multistep M₂ 0 cfg₀
+-- step 1, Λ.B:
+#reduce multistep M₂ 1 cfg₀
 -- step 2, halt:
-#reduce multistep M2 2 cfg₀
+#reduce multistep M₂ 2 cfg₀
 -- step 3, still halted:
-#reduce multistep M2 3 cfg₀
+#reduce multistep M₂ 3 cfg₀
 
-theorem M2_halts : halts M2 :=
+theorem M₂_halts : halts M₂ :=
 ⟨2, rfl⟩
 
-theorem M2_halts' : halts' M2 :=
+theorem M₂_halts' : halts' M₂ :=
 begin
   rw [halts', turing.TM0.eval, part.map_dom, part.dom_iff_mem],
   existsi _, -- or use cfg₀ or refine ⟨_, _⟩
@@ -129,13 +125,13 @@ end
 
 
 -- machine that loops A → B → A → B → ⋯:
-def M3 : turing.TM0.machine Γ Λ
+def M₃ : turing.TM0.machine Γ Λ
 | Λ.A symbol := some ⟨Λ.B, turing.TM0.stmt.write symbol⟩
 | Λ.B symbol := some ⟨Λ.A, turing.TM0.stmt.write symbol⟩
 | _ _ := none
 
-lemma M3_AB_only {n} : ∃ tape,
-  multistep M3 n cfg₀ = some ⟨Λ.A, tape⟩ ∨ multistep M3 n cfg₀ = some ⟨Λ.B, tape⟩ :=
+lemma M₃_AB_only {n} : ∃ tape,
+  multistep M₃ n cfg₀ = some ⟨Λ.A, tape⟩ ∨ multistep M₃ n cfg₀ = some ⟨Λ.B, tape⟩ :=
 begin
   induction n with n hn,
   { existsi _,
@@ -160,11 +156,11 @@ begin
   },
 end
 
-theorem M3_not_halts : ¬ halts M3 :=
+theorem M₃_not_halts : ¬ halts M₃ :=
 begin
   intro h,
   cases h with n hn,
-  cases M3_AB_only with tape h_tape,
+  cases M₃_AB_only with tape h_tape,
   cases h_tape; {
     rw h_tape at hn,
     exact option.no_confusion hn,
