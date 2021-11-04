@@ -15,11 +15,13 @@ instance Γ.inhabited : inhabited Γ := ⟨Γ.zero⟩
 def cfg₀ : turing.TM0.cfg Γ Λ := turing.TM0.init []
 
 -- chainable step function:
-def step' (M : turing.TM0.machine Γ Λ) (x : option (turing.TM0.cfg Γ Λ)) : option (turing.TM0.cfg Γ Λ) :=
-option.bind x (turing.TM0.step M)
+def step' (M : turing.TM0.machine Γ Λ) (x : option (turing.TM0.cfg Γ Λ)) :
+  option (turing.TM0.cfg Γ Λ) :=
+x.bind (turing.TM0.step M)
 
-def multistep (M : turing.TM0.machine Γ Λ) (n : ℕ) : option (turing.TM0.cfg Γ Λ) -> option (turing.TM0.cfg Γ Λ) :=
-n.repeat $ λ _, step' M
+def multistep (M : turing.TM0.machine Γ Λ) :
+  ℕ → option (turing.TM0.cfg Γ Λ) → option (turing.TM0.cfg Γ Λ) :=
+nat.repeat (λ _, step' M)
 
 theorem multistep_none_add {cfg M n m} (hn : multistep M n cfg = none) :
   multistep M (n + m) cfg = none :=
@@ -61,8 +63,8 @@ theorem halts''_iff''' {M} : halts'' M ↔ halts''' M :=
 part.ne_none_iff
 
 theorem halts'_iff''' {M} : halts' M ↔ halts''' M :=
-⟨ (λ h', halts''_iff'''.mp $ halts'_iff''.mp h'),
-  (λ h''', halts'_iff''.mpr $ halts''_iff'''.mpr h''')⟩
+⟨ (λ h', halts''_iff'''.mp (halts'_iff''.mp h')),
+  (λ h''', halts'_iff''.mpr (halts''_iff'''.mpr h'''))⟩
 
 
 -- machine that halts immediately:
