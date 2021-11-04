@@ -82,7 +82,7 @@ theorem M₁_halts : halts M₁ :=
 theorem M₁_halts' : halts' M₁ :=
 begin
   rw [halts', turing.TM0.eval, part.map_dom, part.dom_iff_mem],
-  existsi _, -- or use cfg₀ or refine ⟨_, _⟩
+  existsi _,
   rw turing.mem_eval,
   split,
   { exact relation.refl_trans_gen.refl, },
@@ -116,7 +116,7 @@ theorem M₂_halts : halts M₂ :=
 theorem M₂_halts' : halts' M₂ :=
 begin
   rw [halts', turing.TM0.eval, part.map_dom, part.dom_iff_mem],
-  existsi _, -- or use cfg₀ or refine ⟨_, _⟩
+  existsi _,
   rw turing.mem_eval,
   split,
   { exact relation.refl_trans_gen.refl, },
