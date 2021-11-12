@@ -54,11 +54,6 @@ turing.TM0.eval M [] ≠ part.none
 def halts''' (M : turing.TM0.machine Γ Λ) : Prop :=
 ∃ x, turing.TM0.eval M [] = part.some x
 
-theorem halts_iff' {M} : halts M ↔ halts' M :=
-begin
-  sorry
-end
-
 theorem halts'_iff'' {M} : halts' M ↔ halts'' M :=
 begin
   rw [halts'', ne.def, part.eq_none_iff', ← halts'],
@@ -67,6 +62,16 @@ end
 
 theorem halts''_iff''' {M} : halts'' M ↔ halts''' M :=
 part.ne_none_iff
+
+theorem halts_iff''' {M} : halts M ↔ halts''' M :=
+begin
+  rw [halts, halts'''],
+  split; intro h,
+  { cases h with n h,
+    sorry, },
+  { cases h with x h,
+    sorry, },
+end
 
 
 -- machine that halts immediately:
