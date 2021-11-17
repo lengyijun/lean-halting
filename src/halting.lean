@@ -68,7 +68,10 @@ begin
   rw [halts, halts'''],
   split; intro h,
   { cases h with n h,
-    sorry, },
+    induction n with n hn,
+    { sorry, },
+    { sorry, },
+  },
   { cases h with x h,
     sorry, },
 end
@@ -121,11 +124,11 @@ theorem M₂_halts : halts M₂ :=
 theorem M₂_halts' : halts' M₂ :=
 begin
   rw [halts', turing.TM0.eval, part.map_dom, part.dom_iff_mem],
-  existsi _,
+  existsi turing.TM0.cfg.mk Λ.B (turing.tape.mk₁ []),
   rw turing.mem_eval,
   split,
-  { exact relation.refl_trans_gen.refl, },
   { sorry, },
+  { refl, },
 end
 
 
