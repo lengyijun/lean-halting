@@ -12,10 +12,7 @@ begin
 end
 
 lemma iterate_succ_apply' {α : Type u} (f : α → α) (n : ℕ) (x : α) :
-  f^[n.succ] x = f (f^[n] x) :=
-begin
-  rw iterate_succ',
-end
+  f^[n.succ] x = f (f^[n] x) := by rw iterate_succ'
 
 
 inductive Λ -- states
