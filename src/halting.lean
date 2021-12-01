@@ -1,5 +1,23 @@
 import computability.turing_machine
 
+
+-- would these lemmas be useful additions to mathlib?:
+universe u
+
+lemma iterate_succ' {α : Type u} (f : α → α) (n : ℕ) :
+  f^[n.succ] = f ∘ (f^[n]) :=
+begin
+  rw [nat.succ_eq_one_add, function.iterate_add],
+  refl,
+end
+
+lemma iterate_succ_apply' {α : Type u} (f : α → α) (n : ℕ) (x : α) :
+  f^[n.succ] x = f (f^[n] x) :=
+begin
+  rw iterate_succ',
+end
+
+
 inductive Λ -- states
 | A : Λ
 | B : Λ
@@ -19,16 +37,17 @@ def step' (M : turing.TM0.machine Γ Λ) (x : option (turing.TM0.cfg Γ Λ)) :
   option (turing.TM0.cfg Γ Λ) :=
 x.bind (turing.TM0.step M)
 
-def multistep (M : turing.TM0.machine Γ Λ) :
-  ℕ → option (turing.TM0.cfg Γ Λ) → option (turing.TM0.cfg Γ Λ) :=
-nat.repeat (λ _, step' M)
+-- step a given number of times:
+def multistep (M : turing.TM0.machine Γ Λ) (n : ℕ) (cfg : turing.TM0.cfg Γ Λ) :
+  option (turing.TM0.cfg Γ Λ) :=
+step' M^[n] (some cfg)
 
 theorem multistep_none_add {cfg M n m} (hn : multistep M n cfg = none) :
   multistep M (n + m) cfg = none :=
 begin
   induction m with m hm,
   { exact hn, },
-  { rw [multistep, nat.add_succ, nat.repeat, ← multistep, hm],
+  { rw [multistep, nat.add_succ, iterate_succ_apply', ← multistep, hm],
     refl, },
 end
 
@@ -149,14 +168,14 @@ begin
     cases hn; existsi _,
     {
       right,
-      rw [multistep, nat.repeat, ← multistep, hn, step', option.bind, turing.TM0.step],
+      rw [multistep, iterate_succ_apply', ← multistep, hn, step', option.bind, turing.TM0.step],
       simp,
       existsi _,
       existsi _,
       split; refl, },
     {
       left,
-      rw [multistep, nat.repeat, ← multistep, hn, step', option.bind, turing.TM0.step],
+      rw [multistep, iterate_succ_apply', ← multistep, hn, step', option.bind, turing.TM0.step],
       simp,
       existsi _,
       existsi _,
