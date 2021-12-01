@@ -79,17 +79,27 @@ end
 theorem halts''_iff''' {M} : halts'' M ↔ halts''' M :=
 part.ne_none_iff
 
-theorem halts_iff''' {M} : halts M ↔ halts''' M :=
+theorem halts_iff' {M} : halts M ↔ halts' M :=
 begin
-  rw [halts, halts'''],
-  split; intro h,
-  { cases h with n h,
-    induction n with n hn,
-    { sorry, },
-    { sorry, },
-  },
-  { cases h with x h,
-    sorry, },
+  rw [halts, halts'],
+  simp [turing.TM0.eval, cfg₀, multistep],
+  split,
+  { rintro ⟨n, e⟩,
+    generalize_hyp : turing.TM0.init [] = k at e ⊢,
+    induction n with n IH generalizing k, {cases e},
+    rw [nat.iterate, step', option.bind] at e,
+    cases e' : turing.TM0.step M k; rw e' at e,
+    { exact part.dom_iff_mem.2 ⟨_, turing.mem_eval.2 ⟨relation.refl_trans_gen.refl, e'⟩⟩ },
+    { rw turing.reaches_eval (relation.refl_trans_gen.single e'),
+      exact IH _ e } },
+  { intro h,
+    obtain ⟨a, h⟩ := part.dom_iff_mem.1 h,
+    refine turing.eval_induction h (λ k h IH, _),
+    cases e : turing.TM0.step M k,
+    { exact ⟨1, e⟩ },
+    { obtain ⟨n, hn⟩ := IH _ _ e,
+      { exact ⟨n+1, by simp [nat.iterate, step', e, hn]⟩ },
+      { rwa ← turing.reaches_eval (relation.refl_trans_gen.single e) } } }
 end
 
 
