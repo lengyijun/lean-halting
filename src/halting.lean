@@ -67,6 +67,7 @@ part.ne_none_iff
 
 theorem halts_iff' {M} : halts M ↔ halts' M :=
 begin
+  -- proof by Mario Carneiro …I don't undertand it all
   rw [halts, halts'],
   simp [turing.TM0.eval, cfg₀, multistep],
   split,
