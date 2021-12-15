@@ -105,9 +105,7 @@ begin
   rw [halts', turing.TM0.eval, part.map_dom, part.dom_iff_mem],
   existsi _,
   rw turing.mem_eval,
-  split,
-  { exact relation.refl_trans_gen.refl, },
-  { refl, },
+  exact ⟨relation.refl_trans_gen.refl, rfl⟩,
 end
 
 theorem M₁_halts'' : halts'' M₁ :=
