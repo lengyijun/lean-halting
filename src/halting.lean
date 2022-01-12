@@ -2,14 +2,14 @@ import computability.turing_machine
 
 
 inductive Λ -- states
-| A : Λ
-| B : Λ
-| C : Λ
+| A
+| B
+| C
 instance Λ.inhabited : inhabited Λ := ⟨Λ.A⟩
 
 inductive Γ -- symbols
-| zero : Γ
-| one : Γ
+| zero
+| one
 instance Γ.inhabited : inhabited Γ := ⟨Γ.zero⟩
 
 -- initial state and empty tape:
