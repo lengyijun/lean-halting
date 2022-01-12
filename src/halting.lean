@@ -6,12 +6,11 @@ inductive Λ -- states
 | B
 | C
 
-instance Λ.inhabited : inhabited Λ := ⟨Λ.A⟩
-
 inductive Γ -- symbols
 | zero
 | one
 
+instance Λ.inhabited : inhabited Λ := ⟨Λ.A⟩
 instance Γ.inhabited : inhabited Γ := ⟨Γ.zero⟩
 
 -- initial state and empty tape:
