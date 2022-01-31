@@ -1,3 +1,5 @@
+You can read my notes on this code at https://github.com/hrldcpr/lean-halting
+
 This code uses the Lean proof assistant to prove whether some simple turing machines halt or not.
 
 **[Try it online](https://leanprover-community.github.io/lean-web-editor/#url=https%3A%2F%2Fraw.githubusercontent.com%2Fhrldcpr%2Flean-halting%2Fmain%2Fsrc%2Fhalting.lean)**
