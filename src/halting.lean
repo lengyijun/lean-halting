@@ -110,8 +110,7 @@ end
 
 theorem M₃_not_halts : ¬ halts M₃ :=
 begin
-  intro h,
-  cases h with n hn,
+  rintro ⟨n, hn⟩,
   cases M₃_AB_only with tape h_tape,
   cases h_tape; {
     rw h_tape at hn,
