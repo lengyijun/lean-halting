@@ -1,4 +1,4 @@
-You can read my notes on this code at https://github.com/hrldcpr/lean-halting
+You can read my notes on this code at https://x.st/turing-machine-halting-in-lean/
 
 This code uses the Lean proof assistant to prove whether some simple turing machines halt or not.
 
