@@ -106,6 +106,7 @@ theorem M₃_not_halts : ¬ halts M₃ := by
                   tauto
 
 
+/-
 -- equivalent definitions of halting, using turing.TM0.eval:
 
 def halts' (M : Turing.TM0.Machine Γ Λ) : Prop :=
@@ -117,22 +118,19 @@ Turing.TM0.eval M [] ≠ Part.none
 def halts''' (M : Turing.TM0.Machine Γ Λ) : Prop :=
 ∃ x, Turing.TM0.eval M [] = Part.some x
 
-theorem halts'_iff'' {M} : halts' M ↔ halts'' M :=
-begin
-  rw [halts'', ne.def, part.eq_none_iff', ← halts'],
-  exact not_not.symm,
-end
+theorem halts'_iff'' {M} : halts' M ↔ halts'' M := by
+  rw [halts'', ne.def, Part.eq_none_iff', ← halts']
+  exact not_not.symm
 
 theorem halts''_iff''' {M} : halts'' M ↔ halts''' M :=
 Part.ne_none_iff
 
-theorem halts_iff' {M} : halts M ↔ halts' M :=
-begin
+theorem halts_iff' {M} : halts M ↔ halts' M := by
   -- proof by Mario Carneiro …I don't undertand it all
-  rw [halts, halts'],
-  simp [turing.TM0.eval, cfg₀, multistep],
-  split,
-  { rintro ⟨n, e⟩,
+  rw [halts, halts']
+  simp [Turing.TM0.eval, cfg₀, multistep]
+  split
+  { rintro ⟨n, e⟩
     generalize_hyp : turing.TM0.init [] = k at e ⊢,
     induction n with n IH generalizing k, {cases e},
     rw [nat.iterate, step', option.bind] at e,
@@ -148,16 +146,13 @@ begin
     { obtain ⟨n, hn⟩ := IH _ _ e,
       { exact ⟨n+1, by simp [nat.iterate, step', e, hn]⟩ },
       { rwa ← turing.reaches_eval (relation.refl_trans_gen.single e) } } }
-end
 
 
-theorem M₁_halts' : halts' M₁ :=
-begin
-  rw [halts', turing.TM0.eval, part.map_dom, part.dom_iff_mem],
-  existsi _,
-  rw turing.mem_eval,
-  exact ⟨relation.refl_trans_gen.refl, rfl⟩,
-end
+theorem M₁_halts' : halts' M₁ := by
+  rw [halts', Turing.TM0.eval, Part.map_Dom, Part.dom_iff_mem]
+  existsi _
+  rw [turing.mem_eval]
+  exact ⟨relation.refl_trans_gen.refl, rfl⟩
 
 theorem M₁_halts'' : halts'' M₁ :=
 halts'_iff''.mp M₁_halts'
@@ -166,12 +161,12 @@ theorem M₁_halts''' : halts''' M₁ :=
 halts''_iff'''.mp M₁_halts''
 
 
-theorem M₂_halts' : halts' M₂ :=
-begin
-  rw [halts', turing.TM0.eval, part.map_dom, part.dom_iff_mem],
-  existsi turing.TM0.cfg.mk Λ.B (turing.tape.mk₁ []),
-  rw turing.mem_eval,
-  split,
-  { sorry, },
-  { refl, },
-end
+theorem M₂_halts' : halts' M₂ := by
+  rw [halts', Turing.TM0.eval, Part.map_Dom, Part.dom_iff_mem]
+  existsi Turing.TM0.Cfg.mk Λ.B (Turing.Tape.mk₁ [])
+  rw [Turing.mem_eval]
+  constructor
+  . sorry
+  . tauto
+
+-/
